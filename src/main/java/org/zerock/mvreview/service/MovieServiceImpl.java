@@ -2,16 +2,23 @@ package org.zerock.mvreview.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.mvreview.dto.MovieDto;
+import org.zerock.mvreview.dto.PageRequestDto;
+import org.zerock.mvreview.dto.PageResultDto;
 import org.zerock.mvreview.entity.Movie;
 import org.zerock.mvreview.entity.MovieImage;
 import org.zerock.mvreview.repository.MovieImageRepository;
 import org.zerock.mvreview.repository.MovieRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @Log4j2
@@ -35,5 +42,21 @@ public class MovieServiceImpl implements MovieService {
         });
 
         return movie.getMno();
+    }
+
+    @Override
+    public PageResultDto<MovieDto, Object[]> getList(PageRequestDto requestDto) {
+        Pageable pageable = requestDto.getPageable(Sort.by("mno").descending());
+
+        Page<Object[]> result = movieRepository.getListPage(pageable);
+
+        Function<Object[], MovieDto> fn = (arr -> entityToDto(
+                (Movie) arr[0],
+                (List<MovieImage>) Arrays.asList((MovieImage)arr[1]),
+                (Double) arr[2],
+                (Long) arr[3]
+        ));
+
+        return new PageResultDto<>(result, fn);
     }
 }
