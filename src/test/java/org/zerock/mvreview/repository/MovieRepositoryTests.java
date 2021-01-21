@@ -12,6 +12,7 @@ import org.zerock.mvreview.entity.Movie;
 import org.zerock.mvreview.entity.MovieImage;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -62,6 +63,17 @@ class MovieRepositoryTests {
 
         for(Object[] objects : result.getContent()) {
             System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    @Test
+    public void testGetMovieWillAllImage() {
+        List<Object[]> result = movieRepository.getMovieWithAllImage(97L);
+
+        System.out.println(result);
+
+        for(Object[] arr : result) {
+            System.out.println(Arrays.toString(arr));
         }
     }
 }
