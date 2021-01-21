@@ -7,6 +7,7 @@ import org.zerock.mvreview.entity.Member;
 import org.zerock.mvreview.entity.Movie;
 import org.zerock.mvreview.entity.Review;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +34,21 @@ class ReviewRepositoryTests {
                     .build();
 
             reviewRepository.save(review);
+        });
+    }
+
+    @Test
+    public void testGetMovieReviews() {
+        Movie movie = Movie.builder().mno(97L).build();
+
+        List<Review> result = reviewRepository.findByMovie(movie);
+
+        result.forEach(review -> {
+            System.out.print(review.getReviewnum());
+            System.out.print("\t"+review.getGrade());
+            System.out.print("\t"+review.getText());
+            System.out.print("\t"+review.getMember().getEmail());
+            System.out.println("---------------------------------");
         });
     }
 }
